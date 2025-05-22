@@ -6,6 +6,7 @@ export default function App() {
   return (
     <div>
       <SignInForm />
+      <span></span>
     </div>
   );
 }
