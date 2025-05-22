@@ -44,3 +44,23 @@
 .pwIncorrect {
   border-color: red;
 }
+.productList {
+  margin: 20px;
+  height: 300px;
+  width: 200px;
+  background-color: red;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 5px;
+}
+
+.productList img {
+  height: 180px;
+  width: 180px;
+  border-radius: 10px;
+}
+.productList p {
+  margin: 5px;
+}

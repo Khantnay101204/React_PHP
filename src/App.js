@@ -1,88 +1,65 @@
 import axios from "axios";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import SignInForm from "./SignInForm";
+
+// const products = [
+//   {
+//     id: 1,
+//     name: "Pizzas",
+//     description: "Alot of pizzas",
+//     price: 69,
+//     photoArr: [
+//       "focaccia.jpg",
+//       "funghi.jpg",
+//       "margherita.jpg",
+//       "prosciutto.jpg",
+//       "salamino.jpg",
+//       "spinaci.jpg",
+//     ],
+//   },
+// ];
 
 export default function App() {
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    fetch("http://localhost:8080/restapi/productlist")
+      .then((response) => response.json())
+      .then((data) => {
+        // Parse photoArr for each product
+        const updatedData = data.map((product) => ({
+          ...product,
+          photoArr: JSON.parse(product.photoArr),
+        }));
+        setProducts(updatedData);
+      })
+      .catch((error) => console.error("Error fetching products:", error));
+  }, []);
   return (
     <div>
       <SignInForm />
-      <span></span>
+      <ProductList products={products} />
     </div>
   );
 }
 
-function SignInForm() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [re_password, setRePassword] = useState("");
-  const passwordCorrect = password === re_password;
-  function handleRePasswordChange(event) {
-    setRePassword(event.target.value);
-  }
-
-  function handleUsernameChange(event) {
-    setUsername(event.target.value);
-  }
-  function handlePasswordChange(event) {
-    setPassword(event.target.value);
-  }
-
-  function handleSubmit(event) {
-    event.preventDefault();
-    if (!username.trim() || !password.trim()) {
-      return;
-    }
-    if (!passwordCorrect) {
-      alert("Passwords do not match.");
-      return;
-    }
-
-    const userInput = { username, password };
-
-    axios
-      .post("http://localhost:8080/restapi/signin.php", userInput)
-      .then((response) => {
-        if (response.data.status === 1) {
-          alert("User registered successfully.");
-        } else {
-          alert(response.data.message); // e.g., "Username already exists."
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        alert("An error occurred while connecting to the server.");
-      });
-  }
-
+function ProductList({ products }) {
   return (
-    <div className="sign-in-form">
-      <form>
-        <label>
-          Username:
-          <input type="text" name="username" onChange={handleUsernameChange} />
-        </label>
-        <label>
-          Password:
-          <input
-            className={passwordCorrect ? "" : "pwIncorrect"}
-            type="password"
-            name="password"
-            onChange={handlePasswordChange}
-          />
-        </label>
-        <label>
-          Confirm Password:
-          <input
-            className={passwordCorrect ? "" : "pwIncorrect"}
-            type="password"
-            name="re_password"
-            onChange={handleRePasswordChange}
-          />
-        </label>
-        <button type="submit" onClick={handleSubmit}>
-          Sign In
-        </button>
-      </form>
+    <>
+      {products.map((product) => (
+        <ProductBox product={product} />
+      ))}
+    </>
+  );
+}
+
+function ProductBox({ product }) {
+  return (
+    <div className="productList">
+      <img src={`pizzas/${product.photoArr[0]}`} alt="pizzs" />
+      <p>{product.name}</p>
+      <p>{product.description}</p>
+      <p>{product.price}</p>
     </div>
   );
 }
