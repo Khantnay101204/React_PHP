@@ -64,3 +64,19 @@
 .productList p {
   margin: 5px;
 }
+
+.insertProductForm {
+  border-radius: 20px;
+
+  height: 200px;
+  width: 400px;
+
+  background-color: aqua;
+  display: flex;
+  align-items: center;
+}
+.insertProductForm form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
